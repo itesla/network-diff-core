@@ -1,0 +1,47 @@
+.sld-constant-color-level0 {stroke: black; fill: none}
+.sld-wire.sld-constant-color-level0 {stroke: black}
+.sld-line.sld-constant-color-level0 {stroke: black}
+.sld-node.sld-constant-color-level0 {stroke: none; fill: black}
+.sld-busbreaker-connection.sld-constant-color-level0 {stroke: black}
+.sld-busbar-section.sld-constant-color-level0 {stroke: black}
+.sld-disconnector.sld-constant-color-level0 {stroke: black}
+.sld-load.sld-constant-color-level0 {stroke: black}
+.sld-load-break-switch.sld-constant-color-level0 {stroke: black}
+.sld-generator.sld-constant-color-level0 {stroke: black}
+.sld-arrow-p-level0 {fill:black}
+.sld-arrow-q-level0 {fill:black}
+.sld-breaker.sld-constant-color-level0 {stroke: black}
+.sld-two-wt.sld-constant-color-level0 {stroke: black}
+
+.sld-constant-color-level1 {stroke: yellow; fill: none}
+.sld-wire.sld-constant-color-level1 {stroke: yellow}
+.sld-line.sld-constant-color-level1 {stroke: yellow}
+.sld-node.sld-constant-color-level1 {stroke: none; fill: yellow}
+.sld-busbreaker-connection.sld-constant-color-level1 {stroke: yellow}
+.sld-busbar-section.sld-constant-color-level1 {stroke: yellow}
+.sld-disconnector.sld-constant-color-level1 {stroke: yellow}
+.sld-load.sld-constant-color-level1 {stroke: yellow}
+.sld-load-break-switch.sld-constant-color-level1 {stroke: yellow}
+.sld-generator.sld-constant-color-level1 {stroke: yellow}
+.sld-arrow-p-level1 {fill:yellow}
+.sld-arrow-q-level1 {fill:yellow}
+.sld-breaker.sld-constant-color-level1 {stroke: yellow}
+.sld-two-wt.sld-constant-color-level1 {stroke: yellow}
+
+.sld-constant-color-level2 {stroke: red; fill: none}
+.sld-wire.sld-constant-color-level2 {stroke: red}
+.sld-line.sld-constant-color-level2 {stroke: red}
+.sld-node.sld-constant-color-level2 {stroke: none; fill: red}
+.sld-busbreaker-connection.sld-constant-color-level2 {stroke: red}
+.sld-busbar-section.sld-constant-color-level2 {stroke: red}
+.sld-disconnector.sld-constant-color-level2 {stroke: red}
+.sld-load.sld-constant-color-level2 {stroke: red}
+.sld-load-break-switch.sld-constant-color-level2 {stroke: red}
+.sld-generator.sld-constant-color-level2 {stroke: red}
+.sld-arrow-p-level2 {fill:red}
+.sld-arrow-q-level2 {fill:red}
+.sld-breaker.sld-constant-color-level2 {stroke: red}
+.sld-two-wt.sld-constant-color-level2 {stroke: red}
+
+
+

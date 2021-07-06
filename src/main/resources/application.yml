@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: network-diff-server
+
+server:
+  port: 6007
+
+network-store-server:
+  base-uri: http://localhost:8080
