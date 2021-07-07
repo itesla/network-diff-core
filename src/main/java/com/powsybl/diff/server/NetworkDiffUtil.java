@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 /**
  * @author Christian Biasuzzi <christian.biasuzzi@techrain.eu>
  */
-class NetworkDiffUtil {
+public class NetworkDiffUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NetworkDiffUtil.class);
 
