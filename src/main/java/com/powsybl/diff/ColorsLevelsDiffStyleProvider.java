@@ -4,73 +4,44 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.diff.server;
+package com.powsybl.diff;
 
-import static com.powsybl.sld.svg.DiagramStyles.ARROW_ACTIVE_CLASS;
-import static com.powsybl.sld.svg.DiagramStyles.ARROW_REACTIVE_CLASS;
-import static com.powsybl.sld.svg.DiagramStyles.CONSTANT_COLOR_CLASS;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Lists;
 import com.powsybl.sld.library.ComponentLibrary;
 import com.powsybl.sld.library.ComponentTypeName;
 import com.powsybl.sld.model.Edge;
 import com.powsybl.sld.model.FeederNode;
 import com.powsybl.sld.model.Node;
 import com.powsybl.sld.svg.DefaultDiagramStyleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.powsybl.sld.svg.DiagramStyles.ARROW_ACTIVE_CLASS;
+import static com.powsybl.sld.svg.DiagramStyles.ARROW_REACTIVE_CLASS;
+import static com.powsybl.sld.svg.DiagramStyles.CONSTANT_COLOR_CLASS;
 
 /**
  * @author Massimo Ferraro <massimo.ferraro@soft.it>
  */
-public class MultipleColorsLevelsDiffStyleProvider extends DefaultDiagramStyleProvider implements ExtendedDiagramStyleProvider {
+public class ColorsLevelsDiffStyleProvider extends DefaultDiagramStyleProvider implements ExtendedDiagramStyleProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MultipleColorsLevelsDiffStyleProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ColorsLevelsDiffStyleProvider.class);
 
-    public static final String LEVEL_PREFIX = "-level-";
-    public static final String LEVEL_0_SUFFIX = LEVEL_PREFIX + "0";
+    public static final String LEVEL_0_SUFFIX = "-level0";
+    public static final String LEVEL_1_SUFFIX = "-level1";
+    public static final String LEVEL_2_SUFFIX = "-level2";
 
     final ColorsLevelsDiffData diffData;
-    final List<LevelData> levels;
-    final boolean usePercentage;
-    final String css;
+    final ColorsLevelsDiffConfig colorsLevelsDiffConfig;
 
-    public MultipleColorsLevelsDiffStyleProvider(ColorsLevelsDiffData diffData, LevelsData levelsData, boolean usePercentage) {
+    public ColorsLevelsDiffStyleProvider(ColorsLevelsDiffData diffData, ColorsLevelsDiffConfig colorsLevelsDiffConfig) {
         this.diffData = Objects.requireNonNull(diffData);
-        this.css = this.getCss(Objects.requireNonNull(levelsData).levels);
-        this.levels = Lists.reverse(levelsData.levels);
-        this.usePercentage = usePercentage;
-    }
-
-    private String getCss(List<LevelData> levels) {
-        String css = getLevelCss(LEVEL_0_SUFFIX, "black");
-        for (LevelData level : levels) {
-            css = String.join("\n", css, getLevelCss(LEVEL_PREFIX + level.id, level.c));
-        }
-        return css;
-    }
-
-    private String getLevelCss(String levelSuffix, String color) {
-        return ".sld-constant-color" + levelSuffix + " {stroke: " + color + "; fill: none}\n" +
-                ".sld-wire.sld-constant-color" + levelSuffix + " {stroke: " + color + "}\n" +
-                ".sld-line.sld-constant-color" + levelSuffix + " {stroke: " + color + "}\n" +
-                ".sld-node.sld-constant-color" + levelSuffix + " {stroke: none; fill: " + color + "}\n" +
-                ".sld-busbreaker-connection.sld-constant-color" + levelSuffix + " {stroke: " + color + "}\n" +
-                ".sld-busbar-section.sld-constant-color" + levelSuffix + " {stroke: " + color + "}\n" +
-                ".sld-disconnector.sld-constant-color" + levelSuffix + " {stroke: " + color + "}\n" +
-                ".sld-load.sld-constant-color" + levelSuffix + " {stroke: " + color + "}\n" +
-                ".sld-load-break-switch.sld-constant-color" + levelSuffix + " {stroke: " + color + "}\n" +
-                ".sld-generator.sld-constant-color" + levelSuffix + " {stroke: " + color + "}\n" +
-                ".sld-arrow-p" + levelSuffix + " {fill:" + color + "}\n" +
-                ".sld-arrow-q" + levelSuffix + " {fill:" + color + "}\n" +
-                ".sld-breaker.sld-constant-color" + levelSuffix + " {stroke: " + color + "}\n" +
-                ".sld-two-wt.sld-constant-color" + levelSuffix + " {stroke: " + color + "}\n";
+        this.colorsLevelsDiffConfig = Objects.requireNonNull(colorsLevelsDiffConfig);
     }
 
     @Override
@@ -79,7 +50,7 @@ public class MultipleColorsLevelsDiffStyleProvider extends DefaultDiagramStylePr
         //LOGGER.debug("node before: id {} node_type {} componenttype {}, styles {}", node.getId(), node.getType(), node.getComponentType(), nodeStyles);
         String diffSuffix = LEVEL_0_SUFFIX;
         if (Node.NodeType.SWITCH.equals(node.getType()) && diffData.getSwitchesDiff().contains(node.getId())) {
-            diffSuffix = LEVEL_PREFIX + levels.get(0).id;
+            diffSuffix = LEVEL_2_SUFFIX;
         } else if (ComponentTypeName.TWO_WINDINGS_TRANSFORMER.equals(node.getComponentType())) {
             List<String> edgesNodesIds = node.getAdjacentEdges()
                                              .stream()
@@ -93,13 +64,13 @@ public class MultipleColorsLevelsDiffStyleProvider extends DefaultDiagramStylePr
             if (diffData.getBranchesSideDiffs().keySet().containsAll(edgesNodesIds) || diffData.getBranchesSideDiffs().containsKey(node.getId())) {
                 double iDelta = 0;
                 if (diffData.getBranchesSideDiffs().containsKey(node.getId())) {
-                    iDelta = usePercentage
+                    iDelta = colorsLevelsDiffConfig.isUsePercentage()
                              ? diffData.getBranchesSideDiffs().get(node.getId()).getiDeltaP()
                              : diffData.getBranchesSideDiffs().get(node.getId()).getiDelta();
                 } else {
                     iDelta = edgesNodesIds.stream()
                                           .mapToDouble(nodeId -> {
-                                              return usePercentage
+                                              return colorsLevelsDiffConfig.isUsePercentage()
                                                      ? diffData.getBranchesSideDiffs().get(nodeId).getiDeltaP()
                                                      : diffData.getBranchesSideDiffs().get(nodeId).getiDelta();
                                           })
@@ -124,11 +95,11 @@ public class MultipleColorsLevelsDiffStyleProvider extends DefaultDiagramStylePr
         if (diffData.getBranchesSideDiffs().containsKey(node1.getId()) || diffData.getBranchesSideDiffs().containsKey(node2.getId())) {
             double iDelta = 0;
             if (diffData.getBranchesSideDiffs().containsKey(node1.getId())) {
-                iDelta = usePercentage
+                iDelta = colorsLevelsDiffConfig.isUsePercentage()
                          ? diffData.getBranchesSideDiffs().get(node1.getId()).getiDeltaP()
                          : diffData.getBranchesSideDiffs().get(node1.getId()).getiDelta();
             } else if (diffData.getBranchesSideDiffs().containsKey(node2.getId())) {
-                iDelta = usePercentage
+                iDelta = colorsLevelsDiffConfig.isUsePercentage()
                          ? diffData.getBranchesSideDiffs().get(node2.getId()).getiDeltaP()
                          : diffData.getBranchesSideDiffs().get(node2.getId()).getiDelta();
             }
@@ -139,10 +110,15 @@ public class MultipleColorsLevelsDiffStyleProvider extends DefaultDiagramStylePr
         return style;
     }
 
+    @Override
+    public List<String> getCssFilenames() {
+        return Stream.concat(super.getCssFilenames().stream(), Stream.of("colors-levels-diffs.css")).collect(Collectors.toList());
+    }
+
     public String getArrowsActiveStyle(FeederNode feederNode, ComponentLibrary componentLibrary) {
         String diffSuffix = LEVEL_0_SUFFIX;
         if (diffData.getBranchesSideDiffs().containsKey(feederNode.getId())) {
-            double pDelta = usePercentage
+            double pDelta = colorsLevelsDiffConfig.isUsePercentage()
                             ? diffData.getBranchesSideDiffs().get(feederNode.getId()).getpDeltaP()
                             : diffData.getBranchesSideDiffs().get(feederNode.getId()).getpDelta();
             diffSuffix = getLevel(pDelta);
@@ -153,7 +129,7 @@ public class MultipleColorsLevelsDiffStyleProvider extends DefaultDiagramStylePr
     public String getArrowsReactiveStyle(FeederNode feederNode, ComponentLibrary componentLibrary) {
         String diffSuffix = LEVEL_0_SUFFIX;
         if (diffData.getBranchesSideDiffs().containsKey(feederNode.getId())) {
-            double qDelta = usePercentage
+            double qDelta = colorsLevelsDiffConfig.isUsePercentage()
                             ? diffData.getBranchesSideDiffs().get(feederNode.getId()).getqDeltaP()
                             : diffData.getBranchesSideDiffs().get(feederNode.getId()).getqDelta();
             diffSuffix = getLevel(qDelta);
@@ -162,16 +138,12 @@ public class MultipleColorsLevelsDiffStyleProvider extends DefaultDiagramStylePr
     }
 
     private String getLevel(double delta) {
-        for (LevelData level : levels) {
-            if (delta > level.i) {
-                return LEVEL_PREFIX + level.id;
-            }
+        if (delta > colorsLevelsDiffConfig.getThresholdLevel2()) {
+            return LEVEL_2_SUFFIX;
+        }
+        if (delta > colorsLevelsDiffConfig.getThresholdLevel1()) {
+            return LEVEL_1_SUFFIX;
         }
         return LEVEL_0_SUFFIX;
-    }
-
-    @Override
-    public String getCss() {
-        return css;
     }
 }
