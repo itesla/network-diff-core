@@ -46,7 +46,6 @@
         <mockito.version>1.10.19</mockito.version>
 
         <powsybl-core.version>4.1.2</powsybl-core.version>
-        <powsybl-network-store.version>1.0.0-SNAPSHOT</powsybl-network-store.version>
         <powsybl-single-line-diagram.version>2.1.0</powsybl-single-line-diagram.version>
         <!--gridsuite-geo-data.version>1.0.0-SNAPSHOT</gridsuite-geo-data.version-->
 
@@ -180,7 +179,6 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
 </project>
