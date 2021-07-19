@@ -22,7 +22,7 @@ import java.util.Objects;
  */
 public class DiffDiagramLabelProvider extends DefaultDiagramLabelProvider {
 
-    private final Network network;
+    protected final Network network;
 
     public DiffDiagramLabelProvider(Network net, ComponentLibrary componentLibrary, LayoutParameters layoutParameters) {
         super(net, componentLibrary, layoutParameters);
