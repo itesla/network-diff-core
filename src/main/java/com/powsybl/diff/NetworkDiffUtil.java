@@ -103,7 +103,7 @@ public class NetworkDiffUtil {
             GraphBuilder graphBuilder = new NetworkGraphBuilder(network);
             VoltageLevelDiagram diagram = VoltageLevelDiagram.build(graphBuilder, vlId, new SmartVoltageLevelLayoutFactory(network), false);
             diagram.writeSvg("",
-                    new DiffSVGWriter(componentLibrary, layoutParameters, styleProvider),
+                    new DiffSVGWriter(componentLibrary, layoutParameters, styleProvider, true, false),
                     initProvider,
                     styleProvider,
                     svgWriter,
@@ -120,12 +120,14 @@ public class NetworkDiffUtil {
         return svgData;
     }
 
-    public String getVoltageLevelMergedSvgDiff(Network network1, Network network2, String vlId, double epsilon, double voltageEpsilon, LevelsData levelsData) {
+    public String getVoltageLevelMergedSvgDiff(Network network1, Network network2, String vlId, double epsilon,
+                                               double voltageEpsilon, LevelsData levelsData, boolean showCurrent) {
         try {
             String jsonDiff = diffVoltageLevel(network1, network2, vlId, epsilon, voltageEpsilon);
             ColorsLevelsDiffData diffData = new ColorsLevelsDiffData(jsonDiff);
             boolean usePercentage = true;
-            return writeVoltageLevelMergedSvg(network1, vlId, new MultipleColorsLevelsDiffStyleProvider(diffData, levelsData, usePercentage), diffData, usePercentage);
+            return writeVoltageLevelMergedSvg(network1, vlId, new MultipleColorsLevelsDiffStyleProvider(diffData, levelsData, usePercentage),
+                                              diffData, usePercentage, showCurrent);
         } catch (PowsyblException | IOException e) {
             LOGGER.error(e.getMessage());
             throw new PowsyblException(e.getMessage(), e);
@@ -133,7 +135,7 @@ public class NetworkDiffUtil {
     }
 
     private String writeVoltageLevelMergedSvg(Network network, String vlId, ExtendedDiagramStyleProvider styleProvider,
-                                              ColorsLevelsDiffData diffData, boolean usePercentage) {
+                                              ColorsLevelsDiffData diffData, boolean usePercentage, boolean showCurrent) {
         String svgData;
         String metadataData;
         String jsonData;
@@ -143,11 +145,12 @@ public class NetworkDiffUtil {
             LayoutParameters layoutParameters = new LayoutParameters();
             layoutParameters.setCssInternal(true);
             ComponentLibrary componentLibrary = new ResourcesComponentLibrary("/ConvergenceLibrary");
-            DiagramLabelProvider initProvider = new MergedDiffDiagramLabelProvider(network, componentLibrary, layoutParameters, diffData, usePercentage);
+            DiagramLabelProvider initProvider = new MergedDiffDiagramLabelProvider(network, componentLibrary, layoutParameters,
+                                                                                   diffData, usePercentage, showCurrent);
             GraphBuilder graphBuilder = new NetworkGraphBuilder(network);
             VoltageLevelDiagram diagram = VoltageLevelDiagram.build(graphBuilder, vlId, new SmartVoltageLevelLayoutFactory(network), false);
             diagram.writeSvg("",
-                    new DiffSVGWriter(componentLibrary, layoutParameters, styleProvider),
+                    new DiffSVGWriter(componentLibrary, layoutParameters, styleProvider, !showCurrent, showCurrent),
                     initProvider,
                     styleProvider,
                     svgWriter,
@@ -194,7 +197,7 @@ public class NetworkDiffUtil {
             SubstationDiagram diagram = SubstationDiagram.build(graphBuilder, substationId, new HorizontalSubstationLayoutFactory(),
                     new SmartVoltageLevelLayoutFactory(network), false);
             diagram.writeSvg("",
-                    new DiffSVGWriter(componentLibrary, layoutParameters, styleProvider),
+                    new DiffSVGWriter(componentLibrary, layoutParameters, styleProvider, true, false),
                     initProvider,
                     styleProvider,
                     svgWriter,
@@ -211,12 +214,14 @@ public class NetworkDiffUtil {
         return svgData;
     }
 
-    public String getSubstationMergedSvgDiff(Network network1, Network network2, String substationId, double epsilon, double voltageEpsilon, LevelsData levelsData) {
+    public String getSubstationMergedSvgDiff(Network network1, Network network2, String substationId, double epsilon,
+                                             double voltageEpsilon, LevelsData levelsData, boolean showCurrent) {
         try {
             String jsonDiff = diffSubstation(network1, network2, substationId, epsilon, voltageEpsilon);
             ColorsLevelsDiffData diffData = new ColorsLevelsDiffData(jsonDiff);
             boolean usePercentage = true;
-            return writeSubstationMergedSvg(network1, substationId, new MultipleColorsLevelsDiffStyleProvider(diffData, levelsData, usePercentage), diffData, usePercentage);
+            return writeSubstationMergedSvg(network1, substationId, new MultipleColorsLevelsDiffStyleProvider(diffData, levelsData, usePercentage),
+                                            diffData, usePercentage, showCurrent);
         } catch (PowsyblException | IOException e) {
             LOGGER.error(e.getMessage());
             throw new PowsyblException(e.getMessage(), e);
@@ -224,7 +229,7 @@ public class NetworkDiffUtil {
     }
 
     private String writeSubstationMergedSvg(Network network, String substationId, ExtendedDiagramStyleProvider styleProvider,
-                                            ColorsLevelsDiffData diffData, boolean usePercentage) {
+                                            ColorsLevelsDiffData diffData, boolean usePercentage, boolean showCurrent) {
         String svgData;
         String metadataData;
         String jsonData;
@@ -234,12 +239,13 @@ public class NetworkDiffUtil {
             LayoutParameters layoutParameters = new LayoutParameters();
             layoutParameters.setCssInternal(true);
             ComponentLibrary componentLibrary = new ResourcesComponentLibrary("/ConvergenceLibrary");
-            DiagramLabelProvider initProvider = new MergedDiffDiagramLabelProvider(network, componentLibrary, layoutParameters, diffData, usePercentage);
+            DiagramLabelProvider initProvider = new MergedDiffDiagramLabelProvider(network, componentLibrary, layoutParameters,
+                                                                                   diffData, usePercentage, showCurrent);
             GraphBuilder graphBuilder = new NetworkGraphBuilder(network);
             SubstationDiagram diagram = SubstationDiagram.build(graphBuilder, substationId, new HorizontalSubstationLayoutFactory(),
                     new SmartVoltageLevelLayoutFactory(network), false);
             diagram.writeSvg("",
-                    new DiffSVGWriter(componentLibrary, layoutParameters, styleProvider),
+                    new DiffSVGWriter(componentLibrary, layoutParameters, styleProvider, !showCurrent, showCurrent),
                     initProvider,
                     styleProvider,
                     svgWriter,

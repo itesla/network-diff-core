@@ -28,15 +28,30 @@ public class MergedDiffDiagramLabelProvider extends DiffDiagramLabelProvider {
 
     final ColorsLevelsDiffData diffData;
     final boolean usePercentage;
+    final boolean showCurrent;
 
     public MergedDiffDiagramLabelProvider(Network net, ComponentLibrary componentLibrary, LayoutParameters layoutParameters,
-                                          ColorsLevelsDiffData diffData, boolean usePercentage) {
+                                          ColorsLevelsDiffData diffData, boolean usePercentage, boolean showCurrent) {
         super(net, componentLibrary, layoutParameters);
         this.diffData = diffData;
         this.usePercentage = usePercentage;
+        this.showCurrent = showCurrent;
     }
 
     protected InitialValue buildInitialValue(Terminal terminal, String terminalLabel) {
+        if (showCurrent) {
+            double deltaI = 0;
+            if (diffData.getBranchesSideDiffs().containsKey(terminalLabel)) {
+                deltaI = usePercentage
+                         ? diffData.getBranchesSideDiffs().get(terminalLabel).getiDeltaP()
+                         : diffData.getBranchesSideDiffs().get(terminalLabel).getiDelta();
+            }
+            String label1 = String.valueOf(Precision.round(deltaI, 2));
+            if (usePercentage) {
+                label1 = "NaN".equals(label1) ? label1 : label1 + "%";
+            }
+            return new InitialValue(null, null, label1, null, null, null);
+        }
         double p = terminal.getP();
         double q = terminal.getQ();
         double deltaP = 0;
