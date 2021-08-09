@@ -138,10 +138,10 @@ public class ColorsLevelsDiffStyleProvider extends DefaultDiagramStyleProvider i
     }
 
     private String getLevel(double delta) {
-        if (delta > colorsLevelsDiffConfig.getThresholdLevel2()) {
+        if (Math.abs(delta) > colorsLevelsDiffConfig.getThresholdLevel2()) {
             return LEVEL_2_SUFFIX;
         }
-        if (delta > colorsLevelsDiffConfig.getThresholdLevel1()) {
+        if (Math.abs(delta) > colorsLevelsDiffConfig.getThresholdLevel1()) {
             return LEVEL_1_SUFFIX;
         }
         return LEVEL_0_SUFFIX;

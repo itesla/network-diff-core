@@ -47,6 +47,9 @@ public class MergedDiffDiagramLabelProvider extends DiffDiagramLabelProvider {
                          : diffData.getBranchesSideDiffs().get(terminalLabel).getiDelta();
             }
             String label1 = String.valueOf(Precision.round(deltaI, 2));
+            if ("-0.0".equals(label1) || "0.0".equals(label1)) {
+                label1 = "0";
+            }
             if (usePercentage) {
                 label1 = "NaN".equals(label1) ? label1 : label1 + "%";
             }
@@ -66,6 +69,12 @@ public class MergedDiffDiagramLabelProvider extends DiffDiagramLabelProvider {
         }
         String label1 = String.valueOf(Precision.round(deltaP, 2));
         String label2 = String.valueOf(Precision.round(deltaQ, 2));
+        if ("-0.0".equals(label1) || "0.0".equals(label1)) {
+            label1 = "0";
+        }
+        if ("-0.0".equals(label2) || "0.0".equals(label2)) {
+            label2 = "0";
+        }
         if (usePercentage) {
             label1 = "NaN".equals(label1) ? label1 : label1 + "%";
             label2 = "NaN".equals(label2) ? label2 : label2 + "%";

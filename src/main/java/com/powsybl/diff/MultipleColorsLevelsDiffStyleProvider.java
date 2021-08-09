@@ -163,7 +163,7 @@ public class MultipleColorsLevelsDiffStyleProvider extends DefaultDiagramStylePr
 
     private String getLevel(double delta) {
         for (LevelData level : levels) {
-            if (delta > level.i) {
+            if (Math.abs(delta) > level.i) {
                 return LEVEL_PREFIX + level.id;
             }
         }
