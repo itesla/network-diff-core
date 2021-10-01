@@ -47,8 +47,8 @@
 -->
         <mockito.version>1.10.19</mockito.version>
 
-        <powsybl-core.version>4.1.2</powsybl-core.version>
-        <powsybl-single-line-diagram.version>2.1.0</powsybl-single-line-diagram.version>
+        <powsybl-core.version>4.3.1</powsybl-core.version>
+        <powsybl-single-line-diagram.version>2.3.0</powsybl-single-line-diagram.version>
         <!--gridsuite-geo-data.version>1.0.0-SNAPSHOT</gridsuite-geo-data.version-->
 
         <slf4j.version>1.7.22</slf4j.version>

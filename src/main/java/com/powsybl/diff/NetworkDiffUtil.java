@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.powsybl.sld.library.ConvergenceComponentLibrary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +38,9 @@ import com.powsybl.sld.layout.HorizontalSubstationLayoutFactory;
 import com.powsybl.sld.layout.LayoutParameters;
 import com.powsybl.sld.layout.SmartVoltageLevelLayoutFactory;
 import com.powsybl.sld.library.ComponentLibrary;
-import com.powsybl.sld.library.ResourcesComponentLibrary;
 import com.powsybl.sld.svg.DiagramLabelProvider;
+
+import static com.powsybl.sld.layout.LayoutParameters.CssLocation.INSERTED_IN_SVG;
 
 /**
  * @author Christian Biasuzzi <christian.biasuzzi@techrain.eu>
@@ -97,8 +99,8 @@ public class NetworkDiffUtil {
              StringWriter metadataWriter = new StringWriter();
              StringWriter jsonWriter = new StringWriter()) {
             LayoutParameters layoutParameters = new LayoutParameters();
-            layoutParameters.setCssInternal(true);
-            ComponentLibrary componentLibrary = new ResourcesComponentLibrary("/ConvergenceLibrary");
+            layoutParameters.setCssLocation(INSERTED_IN_SVG);
+            ComponentLibrary componentLibrary = new ConvergenceComponentLibrary();
             DiagramLabelProvider initProvider = new DiffDiagramLabelProvider(network, componentLibrary, layoutParameters);
             GraphBuilder graphBuilder = new NetworkGraphBuilder(network);
             VoltageLevelDiagram diagram = VoltageLevelDiagram.build(graphBuilder, vlId, new SmartVoltageLevelLayoutFactory(network), false);
@@ -143,8 +145,8 @@ public class NetworkDiffUtil {
              StringWriter metadataWriter = new StringWriter();
              StringWriter jsonWriter = new StringWriter()) {
             LayoutParameters layoutParameters = new LayoutParameters();
-            layoutParameters.setCssInternal(true);
-            ComponentLibrary componentLibrary = new ResourcesComponentLibrary("/ConvergenceLibrary");
+            layoutParameters.setCssLocation(INSERTED_IN_SVG);
+            ComponentLibrary componentLibrary = new ConvergenceComponentLibrary();
             DiagramLabelProvider initProvider = new MergedDiffDiagramLabelProvider(network, componentLibrary, layoutParameters,
                                                                                    diffData, usePercentage, showCurrent);
             GraphBuilder graphBuilder = new NetworkGraphBuilder(network);
@@ -190,8 +192,8 @@ public class NetworkDiffUtil {
              StringWriter metadataWriter = new StringWriter();
              StringWriter jsonWriter = new StringWriter()) {
             LayoutParameters layoutParameters = new LayoutParameters();
-            layoutParameters.setCssInternal(true);
-            ComponentLibrary componentLibrary = new ResourcesComponentLibrary("/ConvergenceLibrary");
+            layoutParameters.setCssLocation(INSERTED_IN_SVG);
+            ComponentLibrary componentLibrary = new ConvergenceComponentLibrary();
             DiagramLabelProvider initProvider = new DiffDiagramLabelProvider(network, componentLibrary, layoutParameters);
             GraphBuilder graphBuilder = new NetworkGraphBuilder(network);
             SubstationDiagram diagram = SubstationDiagram.build(graphBuilder, substationId, new HorizontalSubstationLayoutFactory(),
@@ -237,8 +239,8 @@ public class NetworkDiffUtil {
              StringWriter metadataWriter = new StringWriter();
              StringWriter jsonWriter = new StringWriter()) {
             LayoutParameters layoutParameters = new LayoutParameters();
-            layoutParameters.setCssInternal(true);
-            ComponentLibrary componentLibrary = new ResourcesComponentLibrary("/ConvergenceLibrary");
+            layoutParameters.setCssLocation(INSERTED_IN_SVG);
+            ComponentLibrary componentLibrary = new ConvergenceComponentLibrary();
             DiagramLabelProvider initProvider = new MergedDiffDiagramLabelProvider(network, componentLibrary, layoutParameters,
                                                                                    diffData, usePercentage, showCurrent);
             GraphBuilder graphBuilder = new NetworkGraphBuilder(network);
