@@ -23,6 +23,8 @@ public class ColorsLevelsDiffData {
 
     final List<String> switchesDiff;
     final Map<String, BranchSideDiff> branchesSideDiffs;
+    final Map<String, Double> busbarsDiffs;
+    final Map<String, Double> busbarsDiffsP;
 
     class BranchSideDiff {
         final double pDelta;
@@ -90,6 +92,24 @@ public class ColorsLevelsDiffData {
                                                      (((Map) branch).get("branch.terminal2.q-delta-percent") instanceof String) ? Double.NaN : (Double) ((Map) branch).get("branch.terminal2.q-delta-percent"),
                                                      (((Map) branch).get("branch.terminal2.i-delta-percent") instanceof String) ? Double.NaN : (Double) ((Map) branch).get("branch.terminal2.i-delta-percent")));
         });
+        busbarsDiffs = new HashMap<String, Double>();
+        ((List) jsonMap.get("diff.VoltageLevels"))
+                       .stream()
+                       .map(t -> ((Map) t).get("vl.busbarsVoltage-delta"))
+                       .forEach(t -> {
+                           ((Map) t).forEach((key, value) -> {
+                               busbarsDiffs.put((String) key, (Double) value);
+                           });
+                       });
+        busbarsDiffsP = new HashMap<String, Double>();
+        ((List) jsonMap.get("diff.VoltageLevels"))
+                       .stream()
+                       .map(t -> ((Map) t).get("vl.busbarsVoltage-delta-percent"))
+                       .forEach(t -> {
+                           ((Map) t).forEach((key, value) -> {
+                               busbarsDiffsP.put((String) key, (Double) value);
+                           });
+                       });
     }
 
     public List<String> getSwitchesDiff() {
@@ -98,5 +118,13 @@ public class ColorsLevelsDiffData {
 
     public Map<String, BranchSideDiff> getBranchesSideDiffs() {
         return branchesSideDiffs;
+    }
+
+    public Map<String, Double> getBusbarsDiffs() {
+        return busbarsDiffs;
+    }
+
+    public Map<String, Double> getBusbarsDiffsP() {
+        return busbarsDiffsP;
     }
 }

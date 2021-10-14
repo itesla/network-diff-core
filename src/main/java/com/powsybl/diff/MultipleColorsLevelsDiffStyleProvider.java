@@ -108,6 +108,12 @@ public class MultipleColorsLevelsDiffStyleProvider extends DefaultDiagramStylePr
                 }
                 diffSuffix = getLevel(iDelta);
             }
+        } else if (Node.NodeType.BUS.equals(node.getType()) && ComponentTypeName.BUSBAR_SECTION.equals(node.getComponentType())) {
+            if (usePercentage && diffData.getBusbarsDiffsP().containsKey(node.getId())) {
+                diffSuffix = getVLevel(diffData.getBusbarsDiffsP().get(node.getId()));
+            } else if (!usePercentage && diffData.getBusbarsDiffs().containsKey(node.getId())) {
+                diffSuffix = getVLevel(diffData.getBusbarsDiffs().get(node.getId()));
+            }
         }
         Collections.replaceAll(nodeStyles, CONSTANT_COLOR_CLASS, CONSTANT_COLOR_CLASS + diffSuffix);
         //LOGGER.debug("node after: id {} node_type {} componenttype {}, styles {}", node.getId(), node.getType(), node.getComponentType(), nodeStyles);
@@ -164,6 +170,15 @@ public class MultipleColorsLevelsDiffStyleProvider extends DefaultDiagramStylePr
     private String getLevel(double delta) {
         for (LevelData level : levels) {
             if (Math.abs(delta) > level.i) {
+                return LEVEL_PREFIX + level.id;
+            }
+        }
+        return LEVEL_0_SUFFIX;
+    }
+
+    private String getVLevel(double delta) {
+        for (LevelData level : levels) {
+            if (Math.abs(delta) > level.v) {
                 return LEVEL_PREFIX + level.id;
             }
         }
