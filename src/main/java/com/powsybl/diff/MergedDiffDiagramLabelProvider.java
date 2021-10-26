@@ -18,6 +18,7 @@ import com.powsybl.sld.library.ComponentLibrary;
 import com.powsybl.sld.model.Feeder2WTLegNode;
 import com.powsybl.sld.model.Feeder3WTLegNode;
 import com.powsybl.sld.model.FeederBranchNode;
+import com.powsybl.sld.model.Node;
 import com.powsybl.sld.svg.InitialValue;
 
 /**
@@ -109,5 +110,19 @@ public class MergedDiffDiagramLabelProvider extends DiffDiagramLabelProvider {
             return buildInitialValue(transformer.getTerminal(side), node.getEquipmentId() + "_" + node.getSide().name());
         }
         return new InitialValue(null, null, null, null, null, null);
+    }
+
+    @Override
+    protected String getBusVoltageLabel(Node node) {
+        String label = "0";
+        if (usePercentage && diffData.getBusbarsDiffsP().containsKey(node.getId())) {
+            label = String.valueOf(Precision.round(diffData.getBusbarsDiffsP().get(node.getId()), 2));
+        } else if (!usePercentage && diffData.getBusbarsDiffs().containsKey(node.getId())) {
+            label = String.valueOf(Precision.round(diffData.getBusbarsDiffs().get(node.getId()), 2));
+        }
+        if ("-0.0".equals(label) || "0.0".equals(label)) {
+            label = "0";
+        }
+        return usePercentage ? label + "%" : label;
     }
 }
