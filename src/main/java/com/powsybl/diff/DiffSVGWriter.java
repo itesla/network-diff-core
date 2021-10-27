@@ -6,6 +6,7 @@
  */
 package com.powsybl.diff;
 
+import static com.powsybl.sld.layout.LayoutParameters.CssLocation.INSERTED_IN_SVG;
 import static com.powsybl.sld.library.ComponentTypeName.ARROW;
 import static com.powsybl.sld.svg.DiagramStyles.ARROW_ACTIVE_CLASS;
 import static com.powsybl.sld.svg.DiagramStyles.ARROW_REACTIVE_CLASS;
@@ -96,7 +97,7 @@ public class DiffSVGWriter extends DefaultSVGWriter {
         if (css == null || css.isEmpty()) {
             return;
         }
-        if (layoutParameters.isCssInternal()) {
+        if (layoutParameters.getCssLocation() == INSERTED_IN_SVG) {
             Node styleNode = document.getElementsByTagName(STYLE).item(0);
             Node oldCDataNode = styleNode.getFirstChild();
             if (oldCDataNode.getNodeType() == Node.CDATA_SECTION_NODE) {
