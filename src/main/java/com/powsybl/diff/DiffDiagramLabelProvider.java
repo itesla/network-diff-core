@@ -124,7 +124,8 @@ public class DiffDiagramLabelProvider extends DefaultDiagramLabelProvider {
 
     protected String getBusVoltageLabel(Node node) {
         BusbarSection busbarSection = network.getBusbarSection(node.getEquipmentId());
-        return busbarSection != null ?  String.valueOf(Precision.round(busbarSection.getV(), 2)) : "";
+        //return busbarSection != null ?  String.valueOf(Precision.round(busbarSection.getV(), 2)) : "";
+        return busbarSection != null ?  String.valueOf(Precision.round(busbarSection.getTerminal().getBusBreakerView().getBus().getV(), 2)) : "";
     }
 
     protected LabelPosition getBusVoltageLabelPosition(Node node) {
